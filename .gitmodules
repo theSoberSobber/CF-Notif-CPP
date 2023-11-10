@@ -1,3 +1,0 @@
-[submodule "dependencies/cpr"]
-	path = dependencies/cpr
-	url = https://github.com/libcpr/cpr.git
