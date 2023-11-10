@@ -1,1 +1,8 @@
 *.exe
+/_deps
+/CMakeFiles
+*.vcxproj
+*.vcxproj.filters
+*.cmake
+*.sln
+CMakeCache.txt
