@@ -3,22 +3,25 @@ project(base VERSION 0.1.0 LANGUAGES C CXX)
 
 set(EXEC_NAME meow)
 
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-
-set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
 file(GLOB_RECURSE SRC_FILES "src/*.cpp")
-
-add_subdirectory(dependencies/cpr)
-set(ENABLE_CXX, ON)
 
 add_executable(meow ${SRC_FILES})
 
-target_include_directories(meow PRIVATE dependencies/cpr/include)
+# set(EXTERNAL_LIB_HEADERS lib/cpr/include)
 
-target_link_libraries(meow PRIVATE cpr)
+# target_include_directories(meow PRIVATE ${EXTERNAL_LIB_HEADERS})
 
-set(CPACK_PROJECT_NAME ${PROJECT_NAME})
-set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
-include(CPack)
+add_subdirectory(lib/cpr)
+
+target_link_libraries(meow cpr)
+
+if(WIN32)
+  add_custom_command(
+    TARGET meow POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    $<TARGET_FILE:CURL::libcurl>
+    $<TARGET_FILE:cpr>
+    $<TARGET_FILE_DIR:meow>
+  )
+endif()
+

@@ -6,3 +6,4 @@
 *.cmake
 *.sln
 CMakeCache.txt
+Makefile
