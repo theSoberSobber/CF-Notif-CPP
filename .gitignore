@@ -1,9 +1,12 @@
 *.exe
 /_deps
+/build
 /CMakeFiles
 *.vcxproj
 *.vcxproj.filters
 *.cmake
 *.sln
+*.dll
+src/.vscode/
 CMakeCache.txt
 Makefile

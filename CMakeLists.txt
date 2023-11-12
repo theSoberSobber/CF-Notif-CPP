@@ -3,17 +3,12 @@ project(base VERSION 0.1.0 LANGUAGES C CXX)
 
 set(EXEC_NAME meow)
 
-file(GLOB_RECURSE SRC_FILES "src/*.cpp")
-
-add_executable(meow ${SRC_FILES})
-
-# set(EXTERNAL_LIB_HEADERS lib/cpr/include)
-
-# target_include_directories(meow PRIVATE ${EXTERNAL_LIB_HEADERS})
+add_executable(meow src/main.cpp src/popup.cpp)
 
 add_subdirectory(lib/cpr)
+add_subdirectory(lib/json)
 
-target_link_libraries(meow cpr)
+target_link_libraries(meow cpr winmm.lib nlohmann_json::nlohmann_json)
 
 if(WIN32)
   add_custom_command(
@@ -24,4 +19,3 @@ if(WIN32)
     $<TARGET_FILE_DIR:meow>
   )
 endif()
-
