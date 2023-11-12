@@ -1,8 +1,21 @@
 *.exe
 /_deps
+<<<<<<< HEAD
 /CMakeFiles
 *.vcxproj
 *.vcxproj.filters
 *.cmake 
 *.sln
 CMakeCache.txt
+=======
+/build
+/CMakeFiles
+*.vcxproj
+*.vcxproj.filters
+*.cmake
+*.sln
+*.dll
+src/.vscode/
+CMakeCache.txt
+Makefile
+>>>>>>> 328ffe09e7ebca16fc0c055141dfae3d5af216ee
