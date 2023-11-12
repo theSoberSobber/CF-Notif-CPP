@@ -4,6 +4,8 @@
 #include <vector>
 #include <map>
 #include "popup.h"
+#include "readCsv.h"
+
 using json = nlohmann::json;
 
 #include "config.h"
@@ -25,7 +27,11 @@ auto monitor = [](std::string user){
   assert(res["status"]=="OK");
   reverse(res["result"].begin(), res["result"].end());
   for(auto i: res["result"]){
-    if(i["creationTimeSeconds"].template get<int>() >= lastTime[user] && startTime - i["creationTimeSeconds"].template get<int>() <= threshold){
+    if(i["creationTimeSeconds"].template get<int>() > lastTime[user] && startTime - i["creationTimeSeconds"].template get<int>() <= threshold){
+      if(i["verdict"].template get<std::string> () == "TESTING") continue;
+      #ifdef DEBUG
+      std::cout<<i["creationTimeSeconds"] << " " << lastTime[user] << " " << startTime << std::endl;
+      #endif
       popup(user, i["problem"]["name"].template get<std::string>(), 1);
       lastTime[user] = i["creationTimeSeconds"].template get<int>();
     }
@@ -33,6 +39,12 @@ auto monitor = [](std::string user){
 };
 
 int main(){
+  std::pair<bool, std::vector<std::string>> res = readCsv("friends.txt");
+  if(!res.first) return -1;
+  std::vector<std::string> handles = res.second;
+  #ifdef DEBUG
+  for(std::string i: handles) std::cout<<i<<std::endl;
+  #endif
   while(1){
     for(std::string i: handles) monitor(i);
     #ifdef DEBUG

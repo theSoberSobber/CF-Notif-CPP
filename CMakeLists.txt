@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 set(EXEC_NAME meow)
 
-add_executable(meow src/main.cpp src/popup.cpp)
+add_executable(meow src/main.cpp src/popup.cpp src/readCsv.cpp)
 
 add_subdirectory(lib/cpr)
 add_subdirectory(lib/json)
