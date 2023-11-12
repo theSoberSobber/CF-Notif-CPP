@@ -16,6 +16,7 @@ jobs:
         with:
           msystem: MINGW64
           install: >-
+            mingw-w64-x86_64-toolchain
             mingw-w64-x86_64-gcc
             mingw-w64-x86_64-binutils
             mingw-w64-x86_64-make
@@ -27,7 +28,7 @@ jobs:
 
       - name: Build
         run : |
-          cmake . -G "Unix Makefiles"
+          cmake -G "Unix Makefiles" .
           make all
           mkdir release
           cp meow.exe release
