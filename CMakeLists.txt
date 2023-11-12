@@ -3,22 +3,19 @@ project(base VERSION 0.1.0 LANGUAGES C CXX)
 
 set(EXEC_NAME meow)
 
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+add_executable(meow src/main.cpp src/popup.cpp)
 
-set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
+add_subdirectory(lib/cpr)
+add_subdirectory(lib/json)
 
-file(GLOB_RECURSE SRC_FILES "src/*.cpp")
+target_link_libraries(meow cpr winmm.lib nlohmann_json::nlohmann_json)
 
-add_subdirectory(dependencies/cpr)
-set(ENABLE_CXX, ON)
-
-add_executable(meow ${SRC_FILES})
-
-target_include_directories(meow PRIVATE dependencies/cpr/include)
-
-target_link_libraries(meow PRIVATE cpr)
-
-set(CPACK_PROJECT_NAME ${PROJECT_NAME})
-set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
-include(CPack)
+if(WIN32)
+  add_custom_command(
+    TARGET meow POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    $<TARGET_FILE:CURL::libcurl>
+    $<TARGET_FILE:cpr>
+    $<TARGET_FILE_DIR:meow>
+  )
+endif()
