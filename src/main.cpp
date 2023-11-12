@@ -9,8 +9,8 @@ using json = nlohmann::json;
 #include "config.h"
 
 auto fetch = [](std::string user){
-  cpr::Response r = cpr::Get(cpr::Url{"https://codeforces.com/api/user.status?handle="+user+"&from=1&count=10"});
   while(1){
+    cpr::Response r = cpr::Get(cpr::Url{"https://codeforces.com/api/user.status?handle="+user+"&from=1&count=10"});
     if(r.status_code==200) return r.text;
     Sleep(1000);
   }
