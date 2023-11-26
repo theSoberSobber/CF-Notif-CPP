@@ -26,13 +26,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: check cmake and make
+      - name: Check for make
         run : |
-          which g++
-          which gcc
+          file /usr/bin/make
       - name: Build
         run : |
-          cmake -G "Unix Makefiles" .
+          cmake -DCMAKE_MAKE_PROGRAM=/usr/bin/make -DCMAKE_CXX_COMPILER=/mingw64/bin/g++ -DCMAKE_C_COMPILER=/mingw64/bin/gcc -G "Unix Makefiles" .
           make all
           mkdir release
           cp meow.exe release
