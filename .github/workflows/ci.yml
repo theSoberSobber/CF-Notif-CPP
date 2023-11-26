@@ -26,7 +26,8 @@ jobs:
             make
       - name: Checkout
         uses: actions/checkout@v2
-        submodules: true
+        with:
+          submodules: true
 
       - name: Build
         run : |
