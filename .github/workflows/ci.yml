@@ -37,12 +37,14 @@ jobs:
           make all
           mkdir release
           cp meow.exe release
+          cp friends.txt release
           cp README.md release
           cp TODO.md release
           cp CHANGELOG.md release
           cp libcurl.dll release
           cp libcpr.dll release
           cp notification.wav release
+          cp notification-2.wav release
       - name: Publish artifacts
         uses: actions/upload-artifact@v2
         with:
