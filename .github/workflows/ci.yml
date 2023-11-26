@@ -28,8 +28,6 @@ jobs:
 
       - name: check cmake and make
         run : |
-          which cmake
-          which make
           which g++
           which gcc
       - name: Build
