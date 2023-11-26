@@ -26,6 +26,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - name: check cmake and make
+        run : |
+          which cmake
+          which make
+          which g++
+          which gcc
       - name: Build
         run : |
           cmake -G "Unix Makefiles" .
@@ -57,7 +63,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        build: [linux, windows]
+        build: [windows]
 
     steps:
       - name: Checkout
