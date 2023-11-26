@@ -10,6 +10,20 @@ using json = nlohmann::json;
 
 #include "config.h"
 
+struct popup_params {
+  std::string user;
+  std::string dialogText;
+  std::string url;
+  int sound;
+};
+
+DWORD WINAPI ThreadPopup(LPVOID lpParam){
+  popup_params* params = static_cast<popup_params*>(lpParam);
+  popup(params->user, (params->dialogText).data(), (params->url).data(), params->sound);
+  delete params;
+  return 0;
+}
+
 auto fetch = [](std::string user){
   while(1){
     cpr::Response r = cpr::Get(cpr::Url{"https://codeforces.com/api/user.status?handle="+user+"&from=1&count=10"});
@@ -36,7 +50,14 @@ auto monitor = [](std::string user){
       std::cout<<i["creationTimeSeconds"] << " " << lastTime[user] << " " << startTime << std::endl;
       std::cout<<url<<std::endl;
       #endif
-      popup(user, dialogText.data(), url.data(), 1);
+      popup_params* params = new popup_params();
+      params->user = user;
+      params->dialogText = dialogText;
+      params->url = url;
+      params->sound = 1;
+      
+      CreateThread(NULL, 0, ThreadPopup, params, 0, NULL);
+      
       lastTime[user] = i["creationTimeSeconds"].template get<int>();
     }
   }
