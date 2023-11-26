@@ -1,5 +1,8 @@
 name: Continuous Integration
 on:
+  push:
+    paths:
+      - 'CHANGELOG.md'
   workflow_dispatch:
 jobs:
   Windows:
@@ -21,10 +24,61 @@ jobs:
             mingw-w64-x86_64-cmake
             mingw-w64-x86_64-pkgconf
             make
+      - name: Checkout
+        uses: actions/checkout@v2
 
-      - name: Check for make
+      - name: Build
         run : |
-          which make
-          which g++
-          which gcc
-          which cmake
+          cmake -G "Unix Makefiles" .
+          make all
+          mkdir release
+          cp meow.exe release
+          cp README.md release
+          cp TODO.md release
+          cp CHANGELOG.md release
+          cp libcurl.dll release
+          cp libcpr.dll release
+          cp notification.wav release
+      - name: Publish artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: untitled-windows
+          path: |
+            release/meow.exe
+            release/TODO.md
+            release/libcurl.dll
+            release/libcpr.dll
+            release/README.md
+            release/CHANGELOG.md
+            release/notification.wav
+  Release:
+    needs: [Windows]
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        build: [linux, windows]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Extract tag name
+        id: tag
+        run: echo ::set-output name=VERSION::$(tail -n1 CHANGELOG.md | head -n1)
+
+      - uses: actions/download-artifact@v2
+      - name: Zip artifacts
+        run: |
+         zip -r untitled-${{matrix.build}}.zip untitled-${{matrix.build}}
+      - name: Create release
+        uses: softprops/action-gh-release@v1
+        with:
+         files: |
+           untitled-${{matrix.build}}.zip
+         body: |
+          This is an automated release of the latest version of CF-Notif-CPP.
+         prerelease: true
+         tag_name: ${{ steps.tag.outputs.VERSION }}
+         name: Untitled ${{ steps.tag.outputs.VERSION }}
+        env:
+         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
