@@ -18,5 +18,4 @@ jobs:
 
       - name: Check for make
         run : |
-          ls /usr/bin
           ls /usr/bin | grep "make"
