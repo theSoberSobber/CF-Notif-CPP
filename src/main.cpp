@@ -29,17 +29,26 @@ auto monitor = [](std::string user){
   for(auto i: res["result"]){
     if(i["creationTimeSeconds"].template get<int>() > lastTime[user] && startTime - i["creationTimeSeconds"].template get<int>() <= threshold){
       if(i["verdict"].template get<std::string> () == "TESTING") continue;
+      std::string url = "https://codeforces.com/contest/" + std::to_string(i["problem"]["contestId"].template get<int>()) + "/problem/" + i["problem"]["index"].template get<std::string>();
+      std::string dialogText = i["problem"]["name"].template get<std::string>() + " : " + i["verdict"].template get<std::string>()+ ", " + std::to_string(i["problem"]["points"].template get<int>());
       #ifdef DEBUG
+      std::cout<<user<<std::endl;
       std::cout<<i["creationTimeSeconds"] << " " << lastTime[user] << " " << startTime << std::endl;
+      std::cout<<url<<std::endl;
       #endif
-      popup(user, i["problem"]["name"].template get<std::string>(), 1);
+      popup(user, dialogText.data(), url.data(), 1);
       lastTime[user] = i["creationTimeSeconds"].template get<int>();
     }
   }
 };
 
 int main(){
-  std::pair<bool, std::vector<std::string>> res = readCsv("friends.txt");
+  std::pair<bool, std::vector<std::string>> res; 
+  #ifdef DEBUG
+  res = readCsv("friends-debug.txt");
+  #else
+  res = readCsv("friends.txt");
+  #endif
   if(!res.first) return -1;
   std::vector<std::string> handles = res.second;
   #ifdef DEBUG
@@ -47,9 +56,9 @@ int main(){
   #endif
   while(1){
     for(std::string i: handles) monitor(i);
-    #ifdef DEBUG
-    break;
-    #endif
+    // #ifdef DEBUG
+    // break;
+    // #endif
     Sleep(2000);
   }
   return 0;

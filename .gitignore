@@ -3,6 +3,7 @@
 /_deps
 /build
 /CMakeFiles
+src/test
 *.vcxproj
 *.vcxproj.filters
 *.cmake
@@ -11,3 +12,4 @@
 src/.vscode/
 CMakeCache.txt
 Makefile
+friends-debug.txt
